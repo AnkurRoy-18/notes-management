@@ -1,97 +1,82 @@
-const quizData = [
-    {
-        question: "Which language is used for web development?",
-        options: ["Python", "Java", "HTML", "C++"],
-        answer: "HTML"
-    },
-    {
-        question: "What does CSS stand for?",
-        options: ["Creative Style System", "Cascading Style Sheets", "Color Style Sheets", "Computer Style Sheets"],
-        answer: "Cascading Style Sheets"
-    },
-    {
-        question: "Which is used for client-side scripting?",
-        options: ["PHP", "Java", "JavaScript", "Python"],
-        answer: "JavaScript"
-    },
-    {
-        question: "Which tag is used to link CSS?",
-        options: ["<css>", "<style>", "<script>", "<link>"],
-        answer: "<link>"
-    },
-    {
-        question: "Which company developed JavaScript?",
-        options: ["Microsoft", "Google", "Netscape", "Apple"],
-        answer: "Netscape"
+const noteText = document.getElementById("note-text");
+const addBtn = document.getElementById("add-btn");
+const notesContainer = document.getElementById("notes-container");
+const errorMsg = document.getElementById("error");
+
+let notes = JSON.parse(localStorage.getItem("notes")) || [];
+let editIndex = null;
+
+addBtn.addEventListener("click", addOrUpdateNote);
+document.addEventListener("DOMContentLoaded", displayNotes);
+
+function addOrUpdateNote() {
+    const text = noteText.value.trim();
+
+    if (text === "") {
+        errorMsg.classList.remove("hidden");
+        return;
     }
-];
 
-let currentQuestion = 0;
-let score = 0;
-let selectedOption = null;
+    errorMsg.classList.add("hidden");
 
-const startBtn = document.getElementById("start-btn");
-const nextBtn = document.getElementById("next-btn");
-const questionEl = document.getElementById("question");
-const optionsEl = document.getElementById("options");
+    if (editIndex !== null) {
+        notes[editIndex] = text;
+        editIndex = null;
+        addBtn.textContent = "Add Note";
+    } else {
+        notes.push(text);
+    }
 
-const startScreen = document.getElementById("start-screen");
-const quizScreen = document.getElementById("quiz-screen");
-const resultScreen = document.getElementById("result-screen");
-const scoreEl = document.getElementById("score");
-
-startBtn.addEventListener("click", startQuiz);
-nextBtn.addEventListener("click", nextQuestion);
-
-function startQuiz() {
-    startScreen.classList.add("hidden");
-    quizScreen.classList.remove("hidden");
-    loadQuestion();
+    noteText.value = "";
+    saveNotes();
+    displayNotes();
 }
 
-function loadQuestion() {
-    nextBtn.disabled = true;
-    selectedOption = null;
-    optionsEl.innerHTML = "";
+function displayNotes() {
+    notesContainer.innerHTML = "";
 
-    const current = quizData[currentQuestion];
-    questionEl.textContent = current.question;
+    notes.forEach((note, index) => {
+        const card = document.createElement("div");
+        card.className = "note-card";
 
-    current.options.forEach(option => {
-        const div = document.createElement("div");
-        div.textContent = option;
-        div.classList.add("option");
-        div.addEventListener("click", () => selectOption(div, option));
-        optionsEl.appendChild(div);
+        const p = document.createElement("p");
+        p.textContent = note;
+
+        const actions = document.createElement("div");
+        actions.className = "note-actions";
+
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "Edit";
+        editBtn.className = "edit-btn";
+        editBtn.onclick = () => editNote(index);
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Delete";
+        deleteBtn.className = "delete-btn";
+        deleteBtn.onclick = () => deleteNote(index);
+
+        actions.appendChild(editBtn);
+        actions.appendChild(deleteBtn);
+
+        card.appendChild(p);
+        card.appendChild(actions);
+
+        notesContainer.appendChild(card);
     });
 }
 
-function selectOption(element, option) {
-    document.querySelectorAll(".option").forEach(opt =>
-        opt.classList.remove("selected")
-    );
-
-    element.classList.add("selected");
-    selectedOption = option;
-    nextBtn.disabled = false;
+function deleteNote(index) {
+    notes.splice(index, 1);
+    saveNotes();
+    displayNotes();
 }
 
-function nextQuestion() {
-    if (selectedOption === quizData[currentQuestion].answer) {
-        score++;
-    }
-
-    currentQuestion++;
-
-    if (currentQuestion < quizData.length) {
-        loadQuestion();
-    } else {
-        showResult();
-    }
+function editNote(index) {
+    noteText.value = notes[index];
+    editIndex = index;
+    addBtn.textContent = "Update Note";
 }
 
-function showResult() {
-    quizScreen.classList.add("hidden");
-    resultScreen.classList.remove("hidden");
-    scoreEl.textContent = `${score} / ${quizData.length}`;
+function saveNotes() {
+    localStorage.setItem("notes", JSON.stringify(notes));
 }

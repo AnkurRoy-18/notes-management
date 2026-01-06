@@ -2,124 +2,150 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
 body {
     min-height: 100vh;
-    background: linear-gradient(135deg, #1d2671, #c33764);
+    background: linear-gradient(135deg, #141e30, #243b55);
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.quiz-wrapper {
-    width: 100%;
     padding: 20px;
 }
 
-.quiz-card {
+.app-container {
+    width: 100%;
+    max-width: 700px;
     background: #ffffff;
-    max-width: 520px;
-    margin: auto;
+    border-radius: 18px;
     padding: 25px;
-    border-radius: 14px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    animation: fadeIn 0.6s ease;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.title {
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-.subtitle {
+/* Header */
+header {
     text-align: center;
     margin-bottom: 20px;
+}
+
+header h1 {
+    margin-bottom: 6px;
+}
+
+header p {
     color: #666;
-}
-
-.quiz-header {
-    text-align: right;
     font-size: 14px;
-    color: #777;
-    margin-bottom: 10px;
 }
 
-#question {
-    margin-bottom: 18px;
+/* Input Section */
+.note-input {
+    position: sticky;
+    top: 0;
+    background: white;
+    padding-bottom: 15px;
+    z-index: 10;
 }
 
-#options {
-    display: grid;
-    gap: 12px;
-}
-
-.option {
-    padding: 14px;
-    border-radius: 10px;
-    border: 2px solid #eee;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 500;
-}
-
-.option:hover {
-    background: #f7f7f7;
-}
-
-.option.selected {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    border-color: transparent;
-    transform: scale(1.02);
-}
-
-.primary-btn {
-    margin-top: 22px;
+textarea {
     width: 100%;
-    padding: 12px;
-    border-radius: 10px;
+    height: 110px;
+    padding: 14px;
+    border-radius: 14px;
+    border: 2px solid #ddd;
+    font-size: 15px;
+    resize: none;
+    transition: 0.3s;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 13px;
     border: none;
-    font-size: 16px;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 500;
     background: linear-gradient(135deg, #667eea, #764ba2);
     color: white;
     cursor: pointer;
     transition: 0.3s;
 }
 
-.primary-btn:hover {
-    opacity: 0.9;
+button:hover {
+    transform: translateY(-1px);
+    opacity: 0.95;
 }
 
-.primary-btn:disabled {
-    background: #aaa;
-    cursor: not-allowed;
-}
-
-.final-score {
-    font-size: 24px;
-    font-weight: bold;
-    margin: 20px 0;
-    color: #764ba2;
+.error {
+    margin-top: 5px;
+    color: #e53935;
+    font-size: 14px;
 }
 
 .hidden {
     display: none;
 }
 
-/* Mobile Responsive */
-@media (max-width: 480px) {
-    .quiz-card {
-        padding: 18px;
-    }
+/* Notes Grid */
+.notes-container {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+}
 
-    #question {
-        font-size: 18px;
+/* Note Card */
+.note-card {
+    background: #f8f9ff;
+    border-radius: 16px;
+    padding: 15px;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.note-card p {
+    font-size: 14.5px;
+    margin-bottom: 14px;
+    word-wrap: break-word;
+    color: #333;
+}
+
+/* Buttons */
+.note-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-btn {
+    flex: 1;
+    background: linear-gradient(135deg, #43cea2, #185a9d);
+}
+
+.delete-btn {
+    flex: 1;
+    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    textarea {
+        height: 90px;
     }
 }
